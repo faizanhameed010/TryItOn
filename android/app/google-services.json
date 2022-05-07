@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "462454198106",
+    "project_id": "tryiton-e075e",
+    "storage_bucket": "tryiton-e075e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:462454198106:android:fb700e08e2823fb149ad63",
+        "android_client_info": {
+          "package_name": "com.tryiton"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "462454198106-lo67fk09h2lvqdd797s0tj8vbgdbf5up.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tryiton",
+            "certificate_hash": "4df291f46585151ee907eddaabfa4f69499b8120"
+          }
+        },
+        {
+          "client_id": "462454198106-2t0bc0iqgl2oa39nb4nprqm483c22iom.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp8WIDxKDcJXbJtA8Nwgl8QgJJdwCTyY0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "462454198106-2t0bc0iqgl2oa39nb4nprqm483c22iom.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
