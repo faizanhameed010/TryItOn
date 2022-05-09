@@ -2,6 +2,14 @@ import * as React from 'react';
 import { Text } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
+
+
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import Auth from "@react-native-firebase/auth";
+
+
+
 import Home from './components/Home.js'
 import Details from './components/Details'
 import OnBoarding from './components/OnBoarding.js';
@@ -11,8 +19,8 @@ import ForgotPassword from './components/ForgotPassword';
 import Otp from './components/Otp';
 import ShoppingCart from './components/ShoppingCart';
 import CheckOut from './components/CheckOut';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import Auth from "@react-native-firebase/auth";
+import AddCard from './components/AddCard';
+import SuccessScreen from './components/SuccessScreen';
 
 
 
@@ -134,6 +142,20 @@ export default function App() {
           <Stack.Screen
             name="CheckOut"
             component={CheckOut}
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen
+            name="AddCard"
+            component={AddCard}
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen
+            name="SuccessScreen"
+            component={SuccessScreen}
             options={{
               headerShown: false
             }}

@@ -20,7 +20,9 @@ const CheckOut = ({ navigation }) => {
 
         if (index === 0) {
             return (
-                <TouchableOpacity>
+                <TouchableOpacity
+                    onPress={() => navigation.navigate("AddCard")}
+                >
                     <View style={{
                         width: (Dimensions.get('window').width / 3),
                         borderRadius: 30,
@@ -31,14 +33,15 @@ const CheckOut = ({ navigation }) => {
                         flexDirection: 'column',
                         justifyContent: 'space-around',
                         alignItems: 'center',
-                    }}>
+                    }}
+                    >
                         <Feature
                             size={22}
                             name={"plus"}
                             color={Colors.white}
                         />
                     </View>
-                </TouchableOpacity>
+                </TouchableOpacity >
             )
         }
         else {
@@ -174,6 +177,7 @@ const CheckOut = ({ navigation }) => {
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                 <TextButton
                                     label="Place Order"
+                                    onPress={()=> navigation.navigate("SuccessScreen")}
                                     buttonContainerStyle={{
                                         backgroundColor: Colors.primary,
                                         borderRadius: 50,

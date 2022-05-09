@@ -184,15 +184,31 @@ export default Home = ({ navigation }) => {
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{
                                 paddingHorizontal: 20,
+                                paddingBottom: 20,
                             }}
                         />
                     </View>
 
                     {/* Popular List */}
-                    <Text style={styles.popularText}>
-                        Popular
-                    </Text>
-                    <View>
+
+                    <View style={{
+                        backgroundColor: Colors.Gray,
+                        width: '95%',
+                        alignSelf: 'flex-end',
+                        borderTopLeftRadius: 30,
+                        alignItems: 'flex-end',
+                        paddingVertical: 10,
+                        paddingBottom: 80
+                    }}>
+                        <Text style={[styles.popularText,
+                        {
+                            position: 'absolute',
+                            transform: [{ rotate: '-90deg'}],
+                            top: 75, 
+                            left: -15
+                        }]}>
+                            Popular
+                        </Text>
                         {
                             popularData.map((item) => (
                                 <View style={[styles.popularContainer,
@@ -214,7 +230,6 @@ export default Home = ({ navigation }) => {
                             ))
                         }
                     </View>
-
                 </ScrollView>
             </SafeAreaView>
         </View>
@@ -334,21 +349,19 @@ const styles = StyleSheet.create({
         color: Colors.secondary,
         textAlign: 'center',
         fontFamily: 'Poppins-SemiBold',
-        paddingTop: 10,
     },
     popularContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+        width: '80%',
         borderRadius: 30,
-        paddingRight: 20,
-        paddingLeft: 20,
-        marginTop: 10,
-        marginBottom: 10,
-        marginRight: 20,
-        marginLeft: 20,
+        paddingHorizontal: 20,
+        marginVertical: 10,
+        marginHorizontal: 20,
     },
     popularImage: {
+        left: -10,
         width: '100%',
         height: 150,
         paddingBottom: 5,
@@ -369,7 +382,6 @@ const styles = StyleSheet.create({
         fontFamily: 'Poppins-Medium',
     },
     popularPrice: {
-
         fontSize: 24,
         color: Colors.secondary,
         textAlign: 'center',

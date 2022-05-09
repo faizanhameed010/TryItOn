@@ -29,7 +29,7 @@ function validateMobile(value, setMobileError) {
     else {
         setMobileError("Invalid Phone Number")
     }
-  }
+}
 
 
 function validatePassword(value, setPasswordError) {
@@ -46,13 +46,21 @@ function confirmPassword(value, password, setPasswordError) {
         setPasswordError("")
     }
 }
+function validateInput(value, minLength, setError) {
+    if (value.length < minLength) {
+        setError("Invalid Input")
+    } else {
+        setError("")
+    }
+}
 
 const utils = {
     isValidEmail,
     validateEmail,
     validatePassword,
     confirmPassword,
-    validateMobile
+    validateMobile,
+    validateInput
 };
 
 export default utils;

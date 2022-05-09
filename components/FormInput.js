@@ -11,6 +11,7 @@ import { utils } from "../utils"
 
 let passwordText;
 let confirmPasswordText;
+let cardText;
 
 const FormInput = ({
     containerStyle,
@@ -27,6 +28,8 @@ const FormInput = ({
     autoCompleteType = "off",
     autoCapitalize = "none",
     errorMsg = "",
+    maxLength,
+    value
 
 }) => {
     const [text, setText] = React.useState("")
@@ -36,7 +39,7 @@ const FormInput = ({
 
 
     return (
-        <View style={{ ...containerStyle, paddingHorizontal: 30 }}>
+        <View style={{ paddingHorizontal: 30, ...containerStyle, }}>
 
 
             {/* Text Input */}
@@ -71,6 +74,7 @@ const FormInput = ({
                         color: Colors.black
                     }}
                     onFocus={onFocus}
+                    maxLength={maxLength}
                     onBlur={onBlur}
                     placeholder={placerholder}
                     placeholderTextColor={Colors.lightGray}
@@ -78,6 +82,7 @@ const FormInput = ({
                     keyboardType={keyboradType}
                     autoCompleteType={autoCompleteType}
                     autoCapitalize={autoCapitalize}
+                    value={value}
                     onChangeText={(text) => {
                         onChange(text)
                         if (placerholder == 'Email')
@@ -90,8 +95,10 @@ const FormInput = ({
                             utils.confirmPassword(text, passwordText, setError)
                             confirmPasswordText = text;
                         }
-
-
+                        else if (placerholder == 'Card Number') {
+                            utils.validateInput(text, 19, setError)
+                            cardText = text;
+                        }
                     }}
                     onChange={(value) => {
                         setText(value)
