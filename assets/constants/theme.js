@@ -20,6 +20,7 @@ export const Colors = {
     lightOrange: "#FDE8CA",
     lightGreen: "#BEECC4",
     lightYellow: "#FFF4C5",
+    lightRed: "#E65758",
     primaryTransparent: 'rgba(44, 185, 176, 0.2)',
     whiteTransparent40: 'rgba(255, 255, 255, 0.4)',
     whiteTransparent10: 'rgba(255, 255, 255, 0.1)'

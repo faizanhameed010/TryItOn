@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const CartLayout = ({ children }) => {
+const CartLayout = ({ title, cartQuantity, children, onPress}) => {
     const navigation = useNavigation();
     return (
 
@@ -49,7 +49,7 @@ const CartLayout = ({ children }) => {
                             color: Colors.white,
                             fontFamily: 'Poppins-Regular',
                         }}>
-                            SHOPPING CART
+                            {title}
                         </Text>
                         <IconButton
                             containerColor={Colors.whiteTransparent10}
@@ -59,7 +59,7 @@ const CartLayout = ({ children }) => {
                             quatity={2}
                             quatityBackgroundColor={Colors.white}
                             quatityTextColor={Colors.primary}
-                            />
+                        />
                     </View>
                     <View style={{
                         justifyContent: 'center',
@@ -71,37 +71,34 @@ const CartLayout = ({ children }) => {
                             color: Colors.white,
                             fontFamily: 'Poppins-Regular',
                         }}>
-                            3 Items added
+                            {cartQuantity}
                         </Text>
                     </View>
                 </View>
 
-                <View>
-                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.primary }} />
+                <View style={{ flex: 3.5, }}>
+                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.primary, }} />
                     <View style={{
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.secondary,
+                        flex: 1,
                         borderTopRightRadius: 75,
-                        height: 75,
-                        justifyContent: 'center'
                     }}>
+                        <View style={{
+                            backgroundColor: Colors.white,
+                            borderTopRightRadius: 75,
+                            borderBottomLeftRadius: 65,
+                            borderBottomRightRadius: 65,
+                            overflow: 'hidden',
+                            minHeight:420
+                        }}>
+                            {children}
+
+                        </View>
                     </View>
                 </View>
 
                 {/* Content/Children */}
 
-                <View style={{
-                    backgroundColor: Colors.secondary,
-                    flex: 2.5,
-                }}>
-                    <ScrollView style={{
-                        backgroundColor: Colors.white,
-                        flex: 1,
-                        borderBottomLeftRadius: 65,
-                        borderBottomRightRadius: 65,
-                    }}>
-                        {children}
-                    </ScrollView>
-                </View>
 
 
                 {/* Footer */}
@@ -114,9 +111,9 @@ const CartLayout = ({ children }) => {
 
                 }}>
                     <View>
-                        <Text style={{
+                    <Text style={{
                             fontSize: 12,
-                            color: Colors.lightGray,
+                            color: Colors.white,
                             textAlign: 'center',
                             fontFamily: 'Poppins-Regular',
                         }}>
@@ -124,10 +121,10 @@ const CartLayout = ({ children }) => {
 
                         </Text>
                         <Text style={{
-                            fontSize: 18,
-                            color: Colors.white,
-                            textAlign: 'center',
-                            fontFamily: 'Poppins-Regular',
+                             fontSize: 18,
+                             color: Colors.primary,
+                             textAlign: 'center',
+                             fontFamily: 'Poppins-Medium',
                         }}>
                             $172,89
                         </Text>
@@ -145,6 +142,7 @@ const CartLayout = ({ children }) => {
                         labelStyle={{
                             color: Colors.white,
                         }}
+                        onPress={onPress}
                     >
                     </TextButton>
 

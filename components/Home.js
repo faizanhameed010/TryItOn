@@ -363,7 +363,6 @@ const styles = StyleSheet.create({
         letterSpacing: 3,
     },
     popularTitle: {
-
         fontSize: 15,
         color: Colors.secondary,
         textAlign: 'center',

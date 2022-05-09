@@ -11,7 +11,9 @@ Ionicons.loadFont()
 const IconButton = ({
     navigation,
     containerColor,
+    containerStyle,
     icon,
+    size = 22,
     iconColor,
     onPress,
     quatity,
@@ -27,19 +29,20 @@ const IconButton = ({
             height: 45,
             width: 45,
             borderRadius: 30,
-            backgroundColor: containerColor
+            backgroundColor: containerColor,
+            ...containerStyle
         }}
             onPress={onPress}
         >
             {(icon == "options") ?
                 <Ionicons
                     name={icon}
-                    size={22}
+                    size={size}
                     color={iconColor}
                 /> :
                 <Feature
                     name={icon}
-                    size={22}
+                    size={size}
                     color={iconColor}
                 />
             }

@@ -13,7 +13,7 @@ Feature.loadFont();
 AntDesign.loadFont();
 
 
-export default Home = ({ navigation, route }) => {
+const Details = ({ navigation, route }) => {
 
     const { item } = route.params;
     const renderSizeItem = ({ item }) => {
@@ -269,3 +269,6 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
 });
+
+
+export default Details

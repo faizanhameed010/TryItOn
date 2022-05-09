@@ -4,14 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './components/Home.js'
 import Details from './components/Details'
-import FilterModel from './components/FilterModel'
 import OnBoarding from './components/OnBoarding.js';
 import SignIn from './components/SignIn';
 import SignUp from './components/SignUp';
 import ForgotPassword from './components/ForgotPassword';
 import Otp from './components/Otp';
 import ShoppingCart from './components/ShoppingCart';
-import SplashScreen from './components/SplashScreen';
+import CheckOut from './components/CheckOut';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Auth from "@react-native-firebase/auth";
 
@@ -119,16 +118,22 @@ export default function App() {
             }}
           />
           <Stack.Screen
+            name="Details"
+            component={Details}
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen
             name="ShoppingCart"
             component={ShoppingCart}
             options={{
               headerShown: false
             }}
           />
-
           <Stack.Screen
-            name="Details"
-            component={Details}
+            name="CheckOut"
+            component={CheckOut}
             options={{
               headerShown: false
             }}
