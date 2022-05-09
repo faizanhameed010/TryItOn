@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, FlatList, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Feature from 'react-native-vector-icons/Feather';
@@ -12,12 +12,19 @@ import popularData from '../assets/data/popularData';
 import trendingData from '../assets/data/trendingData';
 import categoriesData from '../assets/data/categoriesData';
 
+
+import { useSelector } from "react-redux";
+import { cartTotalSelector } from "../Redux/Selector";
+
+
 MaterialCommunityIcons.loadFont();
 Feature.loadFont();
 AntDesign.loadFont();
 
 
-export default Home = ({ navigation }) => {
+const Home = ({ navigation }) => {
+
+    const totalQuantity = useSelector(cartTotalSelector);
 
     const [selectedCategory, setSelectedCategory] = React.useState(null)
     const [products, setProducts] = React.useState(trendingData)
@@ -58,10 +65,7 @@ export default Home = ({ navigation }) => {
 
     const renderTredingItem = ({ item }) => {
         return (
-
-            <TouchableOpacity key={item.id} onPress={() => navigation.navigate('Details', {
-                item: item,
-            })}>
+            <TouchableOpacity key={item.id} onPress={() => navigation.navigate('Details', { item: item })}>
                 <View style={[styles.trendingContainer,
                 { backgroundColor: item.color }
                 ]}
@@ -72,7 +76,7 @@ export default Home = ({ navigation }) => {
                     />
                     <Text style={styles.trendingBrandTitle}>{item.brandTitle}</Text>
                     <Text style={styles.trendingTitle}>{item.title}</Text>
-                    <Text style={styles.trendingPrice}>{item.price}</Text>
+                    <Text style={styles.trendingPrice}>${item.price}</Text>
                 </View>
             </TouchableOpacity>
 
@@ -124,7 +128,7 @@ export default Home = ({ navigation }) => {
                         onPress={() => navigation.navigate('ShoppingCart')}
                         quatityBackgroundColor={Colors.primary}
                         quatityTextColor={Colors.white}
-                        quatity={2}
+                        quatity={totalQuantity}
                     />
                 </View>
 
@@ -203,8 +207,8 @@ export default Home = ({ navigation }) => {
                         <Text style={[styles.popularText,
                         {
                             position: 'absolute',
-                            transform: [{ rotate: '-90deg'}],
-                            top: 75, 
+                            transform: [{ rotate: '-90deg' }],
+                            top: 75,
                             left: -15
                         }]}>
                             Popular
@@ -389,3 +393,7 @@ const styles = StyleSheet.create({
         paddingBottom: 5
     },
 });
+
+
+
+export default Home

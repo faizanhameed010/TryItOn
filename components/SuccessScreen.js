@@ -27,12 +27,16 @@ const SuccessScreen = ({ navigation }) => {
                         overflow: 'hidden'
                     }}>
                     <Image
-                        source={require('../assets/images/bg_pattern.png')}
-                        style={{ resizeMode: 'cover', width: Dimensions.get('window').width, height: '100%' }}
-                    />
+                            source={require('../assets/images/bg_pattern.png')}
+                            style={{
+                                width: '100%',
+                                height: '142%',
+                                position: 'absolute',
+                            }}
+                        />
                 </View>
 
-                <View style={{ flex: 3.5, }}>
+                <View style={{ flex: 4.5, }}>
                     <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: Colors.primary, }} />
                     <View style={{
                         backgroundColor: Colors.secondary,

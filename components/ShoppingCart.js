@@ -7,18 +7,35 @@ import myCartData from '../assets/data/myCartData';
 import { Colors } from '../assets/constants/theme';
 import IconButton from './IconButton';
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+    increment,
+    decrement,
+    clear,
+    removeItem,
+} from "../Redux/Cart/CartSlice";
+import { cartTotalPriceSelector } from "../Redux/Selector";
+import { cartTotalSelector } from "../Redux/Selector";
+
+
 
 
 const ShoppingCart = ({ navigation }) => {
 
-    const [myCartList, setMyCartList] = React.useState(myCartData)
+
+    const dispatch = useDispatch();
+    const cart = useSelector((state) => state.cart);
+    const totalPrice = useSelector(cartTotalPriceSelector);
+    const totalQuantity = useSelector(cartTotalSelector);
+
+    const [myCartList, setMyCartList] = React.useState(cart)
 
 
-    function updateQuantityHandler(newQty, id) {
+    function updateQuantityHandler(newQty = 0, id = 0) {
+        console.log(newQty)
         const newMyCartList = myCartList.map(cl => (
             cl.id === id ? { ...cl, quantity: newQty } : cl
         ))
-        console.log()
         setMyCartList(newMyCartList)
     }
 
@@ -27,10 +44,6 @@ const ShoppingCart = ({ navigation }) => {
         const index = newMyCartList.findIndex(cart => cart.id === id)
         newMyCartList.splice(index, 1)
         setMyCartList(newMyCartList)
-    }
-
-    function totalPayment (){
-        
     }
 
 
@@ -100,7 +113,9 @@ const ShoppingCart = ({ navigation }) => {
                     alignContent: 'center',
                     justifyContent: 'center',
                 }}>
-                    <Text style={{ fontSize: 15, color: Colors.white, textAlign: 'center' }}>x{data.item.quantity}</Text>
+                    <Text style={{ fontSize: 15, color: Colors.white, textAlign: 'center' }}>
+                        x{data.item.quantity}
+                    </Text>
                 </View>
             </View>
         )
@@ -131,17 +146,23 @@ const ShoppingCart = ({ navigation }) => {
                         iconColor={Colors.white}
                         containerStyle={{ height: 60, width: 60 }}
                         size={40}
-                        onPress={() => removeCartItem(data.item.id)}
+                        onPress={() => {
+                            dispatch(removeItem(data.item.id))
+                            removeCartItem(data.item.id)
+                        }}
                     />
                 </View>
                 <StepperInput
-                    onAdd={() => updateQuantityHandler(data.item.quantity + 1, data.item.id)}
+                    onAdd={() => {
+                        updateQuantityHandler(data.item.quantity + 1, data.item.id);
+                        dispatch(increment(data.item.id))
+                    }}
                     onMinus={() => {
                         if (data.item.quantity > 1) {
                             updateQuantityHandler(data.item.quantity - 1, data.item.id)
+                            dispatch(decrement(data.item.id))
                         }
                     }}
-
                 />
             </View>
 
@@ -150,9 +171,10 @@ const ShoppingCart = ({ navigation }) => {
 
     return (
         <CartLayout
-        title={"SHOPPING CART"}
-        onPress={() => navigation.navigate("CheckOut")}
-        cartQuantity={"3 Items added"}
+            title={"SHOPPING CART"}
+            onPress={() => navigation.navigate("CheckOut")}
+            cartQuantity={totalQuantity}
+            price={totalPrice}
         >
             <SwipeListView
                 data={myCartList}

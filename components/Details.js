@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import { Text, View, StyleSheet, ScrollView, Image, FlatList, Dimensions } from 'react-native';
 import Feature from 'react-native-vector-icons/Feather';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -7,7 +7,10 @@ import Colors from '../assets/constants/theme';
 import IconButton from './IconButton';
 import TextButton from "./TextButton";
 
-import trendingData from '../assets/data/trendingData';
+import { addToCart } from "../Redux/Cart/CartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { cartTotalSelector } from "../Redux/Selector";
+
 MaterialCommunityIcons.loadFont();
 Feature.loadFont();
 AntDesign.loadFont();
@@ -16,6 +19,10 @@ AntDesign.loadFont();
 const Details = ({ navigation, route }) => {
 
     const { item } = route.params;
+    const dispatch = useDispatch();
+    const totalQuantity = useSelector(cartTotalSelector);
+
+
     const renderSizeItem = ({ item }) => {
         return (
             <View style={{
@@ -79,7 +86,7 @@ const Details = ({ navigation, route }) => {
                     containerColor={Colors.whiteTransparent40}
                     icon={"shopping-cart"}
                     iconColor={Colors.secondary}
-                    quatity={2}
+                    quatity={totalQuantity}
                     quatityBackgroundColor={Colors.primary}
                     quatityTextColor={Colors.white}
                     onPress={() => navigation.navigate("ShoppingCart")}
@@ -102,7 +109,7 @@ const Details = ({ navigation, route }) => {
                     <View style={styles.detailsContainer}>
                         <Text style={styles.brandTitle}>{item.brandTitle}</Text>
                         <Text style={styles.title}>{item.title}</Text>
-                        <Text style={styles.price}>{item.price}</Text>
+                        <Text style={styles.price}>${item.price}</Text>
                         <Text style={styles.description}>{item.description}</Text>
                         <Text style={styles.title2}>Size</Text>
                         <View style={{ alignItems: 'center' }}>
@@ -161,7 +168,7 @@ const Details = ({ navigation, route }) => {
                                     marginHorizontal: 10,
 
                                 }}
-                                onPress={() => navigation.navigate('ShoppingCart')}
+                                onPress={() => dispatch(addToCart(item))}
                             >
                             </TextButton>
                         </View>

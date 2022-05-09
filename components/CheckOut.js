@@ -7,13 +7,17 @@ import cardData from '../assets/data/cardData';
 import TextButton from './TextButton';
 import Feature from 'react-native-vector-icons/Feather';
 
-Feature.loadFont()
+import { useSelector } from "react-redux";
+import { cartTotalPriceSelector } from "../Redux/Selector";
 
+Feature.loadFont()
 
 
 const CheckOut = ({ navigation }) => {
     const [defaultCard, setDefaultCard] = React.useState(1)
     const [selectedCard, setSelectedCard] = React.useState(null)
+
+    const totalPrice = useSelector(cartTotalPriceSelector);
 
 
     const renderCard = ({ item, index }) => {
@@ -164,7 +168,7 @@ const CheckOut = ({ navigation }) => {
                             </View>
                             <View style={{ marginBottom: 5, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 18, color: Colors.secondary, fontFamily: 'Poppins-Medium' }}>Total Items</Text>
-                                <Text style={{ fontSize: 18, color: Colors.primary, fontFamily: 'Poppins-Medium' }}>$189.99</Text>
+                                <Text style={{ fontSize: 18, color: Colors.primary, fontFamily: 'Poppins-Medium' }}>${totalPrice.toFixed(2)}</Text>
                             </View>
                             <View style={{ marginBottom: 5, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 18, color: Colors.secondary, fontFamily: 'Poppins-Medium' }}>Standard Delivery</Text>
@@ -172,12 +176,12 @@ const CheckOut = ({ navigation }) => {
                             </View>
                             <View style={{ marginBottom: 20, justifyContent: 'space-between', flexDirection: 'row', alignItems: 'center' }}>
                                 <Text style={{ fontSize: 18, color: Colors.secondary, fontFamily: 'Poppins-Medium' }}>Total Payment</Text>
-                                <Text style={{ fontSize: 18, color: Colors.primary, fontFamily: 'Poppins-Medium' }}>$199.99</Text>
+                                <Text style={{ fontSize: 18, color: Colors.primary, fontFamily: 'Poppins-Medium' }}>${(totalPrice + 10).toFixed(2)}</Text>
                             </View>
                             <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                 <TextButton
                                     label="Place Order"
-                                    onPress={()=> navigation.navigate("SuccessScreen")}
+                                    onPress={() => navigation.navigate("SuccessScreen")}
                                     buttonContainerStyle={{
                                         backgroundColor: Colors.primary,
                                         borderRadius: 50,

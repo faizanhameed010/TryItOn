@@ -8,7 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 
 
 
-const CartLayout = ({ title, cartQuantity, children, onPress}) => {
+const CartLayout = ({ title, cartQuantity = 0, children, price = 100, onPress}) => {
     const navigation = useNavigation();
     return (
 
@@ -56,7 +56,7 @@ const CartLayout = ({ title, cartQuantity, children, onPress}) => {
                             icon={"shopping-cart"}
                             iconColor={Colors.white}
                             onPress={() => console.log("Cart")}
-                            quatity={2}
+                            quatity={cartQuantity}
                             quatityBackgroundColor={Colors.white}
                             quatityTextColor={Colors.primary}
                         />
@@ -71,7 +71,7 @@ const CartLayout = ({ title, cartQuantity, children, onPress}) => {
                             color: Colors.white,
                             fontFamily: 'Poppins-Regular',
                         }}>
-                            {cartQuantity}
+                            {cartQuantity} Items added
                         </Text>
                     </View>
                 </View>
@@ -126,7 +126,7 @@ const CartLayout = ({ title, cartQuantity, children, onPress}) => {
                              textAlign: 'center',
                              fontFamily: 'Poppins-Medium',
                         }}>
-                            $172,89
+                            ${price.toFixed(2)}
                         </Text>
                     </View>
                     <TextButton

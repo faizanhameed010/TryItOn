@@ -43,7 +43,16 @@ const AddCard = ({ navigation }) => {
                         backgroundColor: Colors.primary,
                         borderBottomLeftRadius: 75,
                         flex: 1,
+                        overflow: 'hidden'
                     }}>
+                    <Image
+                        source={require('../assets/images/bg_pattern.png')}
+                        style={{
+                            width: '100%',
+                            height: '142%',
+                            position: 'absolute',
+                        }}
+                    />
                     <View
                         style={{
                             paddingVertical: 10,
@@ -100,6 +109,7 @@ const AddCard = ({ navigation }) => {
                                 bottom: -70,
                                 right: -50,
                             }} />
+
                             <View style={{ flex: 1, justifyContent: 'space-between', }}>
                                 <View style={{ alignItems: 'flex-end' }}>
                                     <Image
