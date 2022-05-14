@@ -10,10 +10,11 @@ Feature.loadFont()
 const PopModel = ({ isVisible, onClose, title, icontitle, backColor}) => {
 
     const modalAnimatedValue = React.useRef(new Animated.Value(0)).current
-    const [showFilterModel, setShowFilterModel] = React.useState(isVisible);
+    const [showModel, setShowModel] = React.useState(isVisible);
 
     React.useEffect(() => {
-        if (showFilterModel) {
+        console.log('HELLo')
+        if (showModel) {
             Animated.timing(modalAnimatedValue, {
                 toValue: 1,
                 duration: 100,
@@ -27,7 +28,7 @@ const PopModel = ({ isVisible, onClose, title, icontitle, backColor}) => {
                 useNativeDriver: false
             }).start(() => onClose())
         }
-    }, [showFilterModel])
+    }, [showModel])
 
     const modalY = modalAnimatedValue.interpolate({
         inputRange: [0, 1],
@@ -39,7 +40,6 @@ const PopModel = ({ isVisible, onClose, title, icontitle, backColor}) => {
             transparent={true}
             visible={isVisible}
             style={{
-
                 justifyContent: 'center',
                 alignItems: 'center'
             }}
@@ -53,13 +53,13 @@ const PopModel = ({ isVisible, onClose, title, icontitle, backColor}) => {
 
                 {/* Transparent Background */}
                 <TouchableWithoutFeedback
-                    onPress={() => setShowFilterModel(false)}>
+                    onPress={() => setShowModel(false)}>
                     <View style={{
                         position: 'absolute',
                         top: 0,
                         right: 0,
                         left: 0,
-                        bottom: 0
+                        bottom: 0,
                     }}>
                     </View>
                 </TouchableWithoutFeedback>

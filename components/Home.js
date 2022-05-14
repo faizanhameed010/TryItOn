@@ -14,10 +14,7 @@ import popularData from '../assets/data/popularData';
 import categoriesData from '../assets/data/categoriesData';
 
 import firestore from '@react-native-firebase/firestore';
-
-
-import { useSelector } from "react-redux";
-import { cartTotalSelector } from "../Redux/Selector";
+import Auth from '@react-native-firebase/auth';
 
 
 MaterialCommunityIcons.loadFont();
@@ -27,7 +24,6 @@ AntDesign.loadFont();
 
 const Home = ({ navigation }) => {
 
-    const totalQuantity = useSelector(cartTotalSelector);
 
     const [selectedCategory, setSelectedCategory] = React.useState(null)
     const [products, setProducts] = React.useState([])
@@ -57,6 +53,33 @@ const Home = ({ navigation }) => {
         // Unsubscribe from events when no longer in use
         return () => subscriber();
     }, []);
+
+
+    const [cartProducts, setCartProducts] = React.useState([]);
+    // getting cart products from firestore collection and updating the state
+    React.useEffect(() => {
+        Auth().onAuthStateChanged(user => {
+            if (user) {
+                firestore().collection('Cart ' + user.uid).onSnapshot(snapshot => {
+                    const newCartProduct = snapshot.docs.map((doc) => ({
+                        ID: doc.id,
+                        ...doc.data(),
+                    }));
+                    setCartProducts(newCartProduct);
+                });
+            }
+            else {
+                console.log('user is not signed in to retrieve cart');
+            }
+        })
+    }, [])
+
+    const qty = cartProducts.map(cartProduct => {
+        return cartProduct.qty;
+    })
+    // reducing the qty in a single value
+    const reducerOfQty = (accumulator, currentValue) => accumulator + currentValue;
+    const totalQty = qty.reduce(reducerOfQty, 0);
 
 
     function onSelectCategory(category) {
@@ -156,7 +179,7 @@ const Home = ({ navigation }) => {
                         onPress={() => navigation.navigate('ShoppingCart')}
                         quatityBackgroundColor={Colors.primary}
                         quatityTextColor={Colors.white}
-                        quatity={totalQuantity}
+                        quatity={totalQty}
                     />
                 </View>
 

@@ -21,6 +21,7 @@ import ShoppingCart from './components/ShoppingCart';
 import CheckOut from './components/CheckOut';
 import AddCard from './components/AddCard';
 import SuccessScreen from './components/SuccessScreen';
+import Augmented from './components/Augmented';
 
 
 
@@ -128,6 +129,13 @@ const RootNavigator = () => {
           <Stack.Screen
             name="Details"
             component={Details}
+            options={{
+              headerShown: false
+            }}
+          />
+          <Stack.Screen
+            name="Augmented"
+            component={Augmented}
             options={{
               headerShown: false
             }}

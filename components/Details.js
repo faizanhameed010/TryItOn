@@ -5,11 +5,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Colors from '../assets/constants/theme';
 import IconButton from './IconButton';
+import PopModel from './PopModel';
 import TextButton from "./TextButton";
-
-import { addToCart } from "../Redux/Cart/CartSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { cartTotalSelector } from "../Redux/Selector";
 import firestore from '@react-native-firebase/firestore';
 import Auth from '@react-native-firebase/auth';
 
@@ -20,6 +17,9 @@ AntDesign.loadFont();
 
 
 const Details = ({ navigation, route }) => {
+
+    const [showPopModel, setshowPopModel] = React.useState(false);
+
 
 
     // getting current user uid
@@ -38,8 +38,6 @@ const Details = ({ navigation, route }) => {
     const uid = GetUserUid();
 
     const { item } = route.params;
-    const dispatch = useDispatch();
-    const totalQuantity = useSelector(cartTotalSelector);
 
     let Product;
     const _addToCart = (product) => {
@@ -55,6 +53,32 @@ const Details = ({ navigation, route }) => {
             console.log("error");
         }
     }
+
+    const [cartProducts, setCartProducts] = React.useState([]);
+    // getting cart products from firestore collection and updating the state
+    React.useEffect(() => {
+        Auth().onAuthStateChanged(user => {
+            if (user) {
+                firestore().collection('Cart ' + user.uid).onSnapshot(snapshot => {
+                    const newCartProduct = snapshot.docs.map((doc) => ({
+                        ID: doc.id,
+                        ...doc.data(),
+                    }));
+                    setCartProducts(newCartProduct);
+                });
+            }
+            else {
+                console.log('user is not signed in to retrieve cart');
+            }
+        })
+    }, [])
+
+    const qty = cartProducts.map(cartProduct => {
+        return cartProduct.qty;
+    })
+    // reducing the qty in a single value
+    const reducerOfQty = (accumulator, currentValue) => accumulator + currentValue;
+    const totalQty = qty.reduce(reducerOfQty, 0);
 
 
     const renderSizeItem = ({ item }) => {
@@ -73,7 +97,7 @@ const Details = ({ navigation, route }) => {
                     alignItems: 'center',
                     textAlign: 'center'
                 }}>
-                    {item.size}
+                    {item}
                 </Text>
             </View>
 
@@ -107,7 +131,7 @@ const Details = ({ navigation, route }) => {
                     containerColor={Colors.whiteTransparent40}
                     icon={"shopping-cart"}
                     iconColor={Colors.secondary}
-                    quatity={totalQuantity}
+                    quatity={totalQty}
                     quatityBackgroundColor={Colors.primary}
                     quatityTextColor={Colors.white}
                     onPress={() => navigation.navigate("ShoppingCart")}
@@ -164,6 +188,15 @@ const Details = ({ navigation, route }) => {
                                 labelStyle={{
                                     color: Colors.primary,
                                 }}
+                                onPress={() => {
+                                    if (item.model)
+                                        navigation.navigate('Augmented', { item: item.model, totalQty: totalQty })
+                                    else {
+                                        console.log("heello")
+                                        setshowPopModel(true)
+                                    }
+
+                                }}
                             >
                             </TextButton>
 
@@ -180,15 +213,24 @@ const Details = ({ navigation, route }) => {
                                 }}
                                 onPress={() => {
                                     _addToCart(item)
-                                    dispatch(addToCart(item))
                                 }}
                             >
                             </TextButton>
+                            {
+                                showPopModel &&
+                                <PopModel
+                                    isVisible={showPopModel}
+                                    onClose={() => setshowPopModel(false)}
+                                    title={"Coming Soon"}
+                                    icontitle={'clock'}
+                                    backColor={Colors.primary}
+                                />
+                            }
                         </View>
                     </View>
                 </View>
-            </ScrollView>
-        </View>
+            </ScrollView >
+        </View >
     );
 }
 

@@ -112,10 +112,18 @@ const AddCard = ({ navigation }) => {
 
                             <View style={{ flex: 1, justifyContent: 'space-between', }}>
                                 <View style={{ alignItems: 'flex-end' }}>
-                                    <Image
-                                        source={require('../assets/images/mastercard.png')}
-                                        style={{ resizeMode: 'contain', width: 60, height: 40 }}
-                                    />
+
+                                    {(cardNumber.charAt(0) == 4) ?
+                                        <Image
+                                            source={require('../assets/images/mastercard.png')}
+                                            style={{ resizeMode: 'contain', width: 60, height: 40 }}
+                                        />
+                                        :
+                                        <Image
+                                            source={require('../assets/images/visa.png')}
+                                            style={{ resizeMode: 'contain', width: 60, height: 40 }}
+                                        />
+                                    }
                                 </View>
                                 <View>
                                     <View>
@@ -128,9 +136,6 @@ const AddCard = ({ navigation }) => {
                                 </View>
                             </View>
                         </View>
-
-
-
 
 
 
@@ -194,7 +199,8 @@ const AddCard = ({ navigation }) => {
                             value={cardName}
                             onChange={(value) => {
                                 // Validate Name
-                                setCardName(value)
+                                setCardName(value.replace(/\d/g, '').trim())
+
                             }}
                             appendComponent={
                                 <TouchableOpacity style={{
@@ -227,7 +233,19 @@ const AddCard = ({ navigation }) => {
                                 onChange={(value) => {
                                     // Validate Name
                                     utils.validateInput(value, 5, setExpError)
-                                    setExpName(value)
+                                    setExpName(value.replace(
+                                        /[^0-9]/g, '' // To allow only numbers
+                                    ).replace(
+                                        /^([2-9])$/g, '0$1' // To handle 3 > 03
+                                    ).replace(
+                                        /^(1{1})([3-9]{1})$/g, '0$1/$2' // 13 > 01/3
+                                    ).replace(
+                                        /^0{1,}/g, '0' // To handle 00 > 0
+                                    ).replace(
+                                        /^([0-1]{1}[0-9]{1})([0-9]{1,2}).*/g, '$1/$2' // To handle 113 > 11/3
+                                    ))
+
+
                                 }}
                             />
 

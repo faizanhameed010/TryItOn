@@ -13,11 +13,11 @@ import { cartTotalPriceSelector } from "../Redux/Selector";
 Feature.loadFont()
 
 
-const CheckOut = ({ navigation }) => {
+const CheckOut = ({ navigation, route }) => {
     const [defaultCard, setDefaultCard] = React.useState(1)
     const [selectedCard, setSelectedCard] = React.useState(null)
 
-    const totalPrice = useSelector(cartTotalPriceSelector);
+    const { totalPrice } = route.params;
 
 
     const renderCard = ({ item, index }) => {
@@ -127,7 +127,8 @@ const CheckOut = ({ navigation }) => {
                             CHECK OUT
                         </Text>
                         <IconButton
-                            icon={""}
+                            icon={"plus"}
+                            iconColor={Colors.primary}
                         />
                     </View>
                 </View>

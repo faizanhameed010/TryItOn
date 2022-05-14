@@ -169,7 +169,7 @@ const ShoppingCart = ({ navigation }) => {
                         textAlign: 'center',
                         fontFamily: 'Poppins-SemiBold',
                     }}>
-                        {data.item.price}
+                        ${data.item.price}
                     </Text>
                 </View>
                 <View style={{
@@ -235,7 +235,7 @@ const ShoppingCart = ({ navigation }) => {
     return (
         <CartLayout
             title={"SHOPPING CART"}
-            onPress={() => navigation.navigate("CheckOut")}
+            onPress={() => navigation.navigate("CheckOut", { totalPrice: _totalPrice })}
             cartQuantity={totalQty}
             price={_totalPrice}
         >

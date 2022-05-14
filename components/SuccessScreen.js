@@ -67,7 +67,7 @@ const SuccessScreen = ({ navigation }) => {
                                         color: Colors.primaryTransparent
                                     }}
                                     containerColor={Colors.primaryTransparent}
-                                    icon={"x"}
+                                    icon={"check"}
                                     size={45}
                                     iconColor={Colors.primary}
                                 />
