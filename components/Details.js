@@ -10,6 +10,9 @@ import TextButton from "./TextButton";
 import { addToCart } from "../Redux/Cart/CartSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { cartTotalSelector } from "../Redux/Selector";
+import firestore from '@react-native-firebase/firestore';
+import Auth from '@react-native-firebase/auth';
+
 
 MaterialCommunityIcons.loadFont();
 Feature.loadFont();
@@ -18,9 +21,40 @@ AntDesign.loadFont();
 
 const Details = ({ navigation, route }) => {
 
+
+    // getting current user uid
+    function GetUserUid() {
+        const [uid, setUid] = React.useState(null);
+        React.useEffect(() => {
+            Auth().onAuthStateChanged(user => {
+                if (user) {
+                    setUid(user.uid);
+                }
+            })
+        }, [])
+        return uid;
+    }
+
+    const uid = GetUserUid();
+
     const { item } = route.params;
     const dispatch = useDispatch();
     const totalQuantity = useSelector(cartTotalSelector);
+
+    let Product;
+    const _addToCart = (product) => {
+        if (uid !== null) {
+            Product = product;
+            Product['qty'] = 1;
+            Product['TotalProductPrice'] = Product.qty * Product.price;
+            firestore().collection('Cart ' + uid).doc(product.id).set(Product).then(() => {
+                console.log('successfully added to cart');
+            })
+        }
+        else {
+            console.log("error");
+        }
+    }
 
 
     const renderSizeItem = ({ item }) => {
@@ -41,19 +75,6 @@ const Details = ({ navigation, route }) => {
                 }}>
                     {item.size}
                 </Text>
-            </View>
-
-        );
-    };
-    const renderShoeColorItem = ({ item }) => {
-        return (
-            <View style={{
-                backgroundColor: item.color,
-                padding: 10,
-                borderRadius: 30,
-                width: 40, height: 40,
-                margin: 10
-            }}>
             </View>
 
         );
@@ -97,14 +118,14 @@ const Details = ({ navigation, route }) => {
             {/* Body */}
             <ScrollView>
                 {/* Image Continer */}
-                <View style={[styles.imageContainer, { backgroundColor: item.color }]}>
+                <View style={[styles.imageContainer, { backgroundColor: item.shoeColor }]}>
                     <Image
                         style={styles.image}
-                        source={item.image} />
+                        source={{ uri: item.image }} />
                 </View>
                 {/* Details Container */}
                 <View style={styles.detailsWrapper}>
-                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: item.color }} />
+                    <View style={{ ...StyleSheet.absoluteFillObject, backgroundColor: item.shoeColor }} />
 
                     <View style={styles.detailsContainer}>
                         <Text style={styles.brandTitle}>{item.brandTitle}</Text>
@@ -119,17 +140,6 @@ const Details = ({ navigation, route }) => {
                                 horizontal={true}
                                 keyExtractor={item => item.id}
                                 contentContainerStyle={styles.sizeContainer}
-                                showsHorizontalScrollIndicator={false}
-                            />
-                        </View>
-                        <Text style={styles.title2}>Colors</Text>
-                        <View style={{ alignItems: 'center' }}>
-                            <FlatList
-                                data={item.shoeColor}
-                                renderItem={renderShoeColorItem}
-                                horizontal={true}
-                                keyExtractor={item => item.id}
-                                contentContainerStyle={styles.colorContainer}
                                 showsHorizontalScrollIndicator={false}
                             />
                         </View>
@@ -168,7 +178,10 @@ const Details = ({ navigation, route }) => {
                                     marginHorizontal: 10,
 
                                 }}
-                                onPress={() => dispatch(addToCart(item))}
+                                onPress={() => {
+                                    _addToCart(item)
+                                    dispatch(addToCart(item))
+                                }}
                             >
                             </TextButton>
                         </View>

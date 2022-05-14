@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Text, View, StyleSheet, FlatList, Image, ScrollView, Dimensions, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -9,8 +10,10 @@ import FilterModel from './FilterModel';
 import IconButton from './IconButton';
 
 import popularData from '../assets/data/popularData';
-import trendingData from '../assets/data/trendingData';
+//import trendingData from '../assets/data/trendingData';
 import categoriesData from '../assets/data/categoriesData';
+
+import firestore from '@react-native-firebase/firestore';
 
 
 import { useSelector } from "react-redux";
@@ -27,13 +30,37 @@ const Home = ({ navigation }) => {
     const totalQuantity = useSelector(cartTotalSelector);
 
     const [selectedCategory, setSelectedCategory] = React.useState(null)
-    const [products, setProducts] = React.useState(trendingData)
+    const [products, setProducts] = React.useState([])
+    const [dummyProducts, setDummyProducts] = React.useState([])
+    const [loading, setLoading] = React.useState(true);
     const [showFilterModel, setshowFilterModel] = React.useState(false);
     const [defaultCategory, setDefaultCategory] = React.useState(1);
 
 
+
+    React.useEffect(() => {
+        const trendingData = [];
+        const subscriber = firestore()
+            .collection('TrendingItems')
+            .onSnapshot(querySnapshot => {
+                querySnapshot.forEach(documentSnapshot => {
+                    trendingData.push({
+                        ...documentSnapshot.data(),
+                        key: documentSnapshot.id,
+                    });
+                });
+                setProducts(trendingData)
+                setLoading(false)
+                setDummyProducts(trendingData)
+            });
+
+        // Unsubscribe from events when no longer in use
+        return () => subscriber();
+    }, []);
+
+
     function onSelectCategory(category) {
-        let productsList = trendingData.filter(a => a.category.includes(category.id))
+        let productsList = dummyProducts.filter(a => a.category.includes(category.id))
         setProducts(productsList)
         setSelectedCategory(category)
     }
@@ -64,15 +91,16 @@ const Home = ({ navigation }) => {
     };
 
     const renderTredingItem = ({ item }) => {
+        const shoeColor = item.shoeColor
         return (
-            <TouchableOpacity key={item.id} onPress={() => navigation.navigate('Details', { item: item })}>
+            <TouchableOpacity onPress={() => navigation.navigate('Details', { item: item })}>
                 <View style={[styles.trendingContainer,
-                { backgroundColor: item.color }
+                { backgroundColor: item.shoeColor }
                 ]}
                 >
                     <Image
                         style={styles.trendingImage}
-                        source={item.image}
+                        source={{ uri: item.image }}
                     />
                     <Text style={styles.trendingBrandTitle}>{item.brandTitle}</Text>
                     <Text style={styles.trendingTitle}>{item.title}</Text>
@@ -163,7 +191,7 @@ const Home = ({ navigation }) => {
                         <FlatList
                             data={categoriesData}
                             renderItem={renderCategoryItem}
-                            keyExtractor={item => item.id}
+                            keyExtractor={(item) => item.id}
                             horizontal={true}
                             showsHorizontalScrollIndicator={false}
                             contentContainerStyle={{

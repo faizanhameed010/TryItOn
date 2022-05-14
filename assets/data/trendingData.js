@@ -13,27 +13,22 @@ const trendingData = [
             {
                 id: 1,
                 size: '8',
-                selected: true
-            },
+            },  
             {
                 id: 2,
                 size: '9',
-                selected: false
             },
             {
                 id: 3,
                 size: '10',
-                selected: false
             },
             {
                 id: 4,
                 size: '11',
-                selected: false
             },
             {
                 id: 5,
                 size: '12',
-                selected: false
             }
         ],
         shoeColor: [

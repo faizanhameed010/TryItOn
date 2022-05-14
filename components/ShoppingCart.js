@@ -3,47 +3,114 @@ import { Text, View, Image } from 'react-native';
 import CartLayout from "./CartLayout";
 import StepperInput from "./StepperInput";
 import { SwipeListView } from 'react-native-swipe-list-view'
-import myCartData from '../assets/data/myCartData';
 import { Colors } from '../assets/constants/theme';
 import IconButton from './IconButton';
 
-import { useDispatch, useSelector } from "react-redux";
-import {
-    increment,
-    decrement,
-    clear,
-    removeItem,
-} from "../Redux/Cart/CartSlice";
-import { cartTotalPriceSelector } from "../Redux/Selector";
-import { cartTotalSelector } from "../Redux/Selector";
+import Firestore from '@react-native-firebase/firestore';
+import Auth from '@react-native-firebase/auth';
 
 
 
 
 const ShoppingCart = ({ navigation }) => {
 
-
-    const dispatch = useDispatch();
-    const cart = useSelector((state) => state.cart);
-    const totalPrice = useSelector(cartTotalPriceSelector);
-    const totalQuantity = useSelector(cartTotalSelector);
-
-    const [myCartList, setMyCartList] = React.useState(cart)
+    const [cartProducts, setCartProducts] = React.useState([]);
+    let Product;
 
 
-    function updateQuantityHandler(newQty = 0, id = 0) {
-        console.log(newQty)
-        const newMyCartList = myCartList.map(cl => (
-            cl.id === id ? { ...cl, quantity: newQty } : cl
-        ))
-        setMyCartList(newMyCartList)
+
+    // getting cart products from firestore collection and updating the state
+    React.useEffect(() => {
+        Auth().onAuthStateChanged(user => {
+            if (user) {
+                Firestore().collection('Cart ' + user.uid).onSnapshot(snapshot => {
+                    const newCartProduct = snapshot.docs.map((doc) => ({
+                        ID: doc.id,
+                        ...doc.data(),
+                    }));
+                    setCartProducts(newCartProduct);
+                });
+            }
+            else {
+                console.log('user is not signed in to retrieve cart');
+            }
+        })
+    }, [])
+
+
+
+
+
+    const qty = cartProducts.map(cartProduct => {
+        return cartProduct.qty;
+    })
+    // reducing the qty in a single value
+    const reducerOfQty = (accumulator, currentValue) => accumulator + currentValue;
+    const totalQty = qty.reduce(reducerOfQty, 0);
+
+
+    // getting the TotalProductPrice from cartProducts in a seperate array
+    const price = cartProducts.map((cartProduct) => {
+        return cartProduct.TotalProductPrice;
+    })
+    // reducing the price in a single value
+    const reducerOfPrice = (accumulator, currentValue) => accumulator + currentValue;
+    const _totalPrice = price.reduce(reducerOfPrice, 0);
+
+
+
+
+    // cart product increase function
+    const cartProductIncrease = (cartProduct) => {
+        // console.log(cartProduct);
+        Product = cartProduct;
+        Product.qty = Product.qty + 1;
+        Product.TotalProductPrice = Product.qty * Product.price;
+        // updating in database
+        Auth().onAuthStateChanged(user => {
+            if (user) {
+                Firestore().collection('Cart ' + user.uid).doc(cartProduct.id).update(Product).then(() => {
+                    console.log('increment added');
+                })
+            }
+            else {
+                console.log('user is not logged in to increment');
+            }
+        })
     }
 
-    function removeCartItem(id) {
-        let newMyCartList = [...myCartList]
-        const index = newMyCartList.findIndex(cart => cart.id === id)
-        newMyCartList.splice(index, 1)
-        setMyCartList(newMyCartList)
+    // cart product decrease functionality
+
+    const cartProductDelete = (cartProduct) => {
+        Auth().onAuthStateChanged(user => {
+            if (user) {
+                Firestore().collection('Cart ' + user.uid).doc(cartProduct.id).delete().then(() => {
+                    console.log('successfully deleted');
+                })
+            }
+        })
+    }
+
+
+
+    // cart product decrease functionality
+    const cartProductDecrease = (cartProduct) => {
+        Product = cartProduct;
+        if (Product.qty > 1) {
+            Product.qty = Product.qty - 1;
+            Product.TotalProductPrice = Product.qty * Product.price;
+            // updating in database
+            Auth().onAuthStateChanged(user => {
+                if (user) {
+                    Firestore().collection('Cart ' + user.uid).doc(cartProduct.id).update(Product).then(() => {
+                        console.log('decrement');
+                    })
+                }
+                else {
+                    console.log('user is not logged in to decrement');
+                }
+            })
+        }
     }
 
 
@@ -61,13 +128,13 @@ const ShoppingCart = ({ navigation }) => {
                 <View style={{
                     width: 140,
                     height: 140,
-                    backgroundColor: data.item.color,
+                    backgroundColor: data.item.shoeColor,
                     alignItems: 'center',
                     borderRadius: 20,
                     padding: 5,
                 }}>
                     <Image
-                        source={data.item.image}
+                        source={{ uri: data.item.image }}
                         style={{
                             width: '100%',
                             height: '100%',
@@ -114,7 +181,7 @@ const ShoppingCart = ({ navigation }) => {
                     justifyContent: 'center',
                 }}>
                     <Text style={{ fontSize: 15, color: Colors.white, textAlign: 'center' }}>
-                        x{data.item.quantity}
+                        x{data.item.qty}
                     </Text>
                 </View>
             </View>
@@ -147,21 +214,17 @@ const ShoppingCart = ({ navigation }) => {
                         containerStyle={{ height: 60, width: 60 }}
                         size={40}
                         onPress={() => {
-                            dispatch(removeItem(data.item.id))
-                            removeCartItem(data.item.id)
+                            // dispatch(removeItem(data.item.id))
+                            cartProductDelete(data.item)
                         }}
                     />
                 </View>
                 <StepperInput
                     onAdd={() => {
-                        updateQuantityHandler(data.item.quantity + 1, data.item.id);
-                        dispatch(increment(data.item.id))
+                        cartProductIncrease(data.item)
                     }}
                     onMinus={() => {
-                        if (data.item.quantity > 1) {
-                            updateQuantityHandler(data.item.quantity - 1, data.item.id)
-                            dispatch(decrement(data.item.id))
-                        }
+                        cartProductDecrease(data.item)
                     }}
                 />
             </View>
@@ -173,11 +236,11 @@ const ShoppingCart = ({ navigation }) => {
         <CartLayout
             title={"SHOPPING CART"}
             onPress={() => navigation.navigate("CheckOut")}
-            cartQuantity={totalQuantity}
-            price={totalPrice}
+            cartQuantity={totalQty}
+            price={_totalPrice}
         >
             <SwipeListView
-                data={myCartList}
+                data={cartProducts}
                 keyExtractor={item => `${item.id}`}
                 contentContainerStyle={{
                     paddingHorizontal: 30,
