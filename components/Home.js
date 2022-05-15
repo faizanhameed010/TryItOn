@@ -163,7 +163,7 @@ const Home = ({ navigation }) => {
                         containerColor={Colors.Gray}
                         icon={"menu"}
                         iconColor={Colors.secondary}
-                        onPress={() => console.log("Side Menu")}
+                        onPress={() => navigation.openDrawer()}
                     />
 
 
