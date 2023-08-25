@@ -41,4 +41,4 @@ We would like to express our gratitude to the open-source community for their in
 
 ---
 
-Happy virtual trying-on! Feel free to reach out to us at [contact@example.com](mailto:contact@example.com) for any inquiries or support.
+Happy virtual trying-on! Feel free to reach out to us at [contact@example.com](mailto:faizanhameed010@gmail.com) for any inquiries or support.
